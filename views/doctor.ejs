@@ -1,0 +1,76 @@
+<%- include("partials/header") %>
+
+<div class="text-center mb-4">
+  <h3 class="fw-bold">Doctor Panel</h3>
+  <span id="status" class="badge bg-secondary">Connecting...</span>
+</div>
+
+<div class="card shadow-sm mx-auto" style="max-width: 700px;">
+  <table class="table mb-0 text-center align-middle">
+    <thead class="table-light">
+      <tr><th>Token</th><th>Patient</th><th>Status</th><th>Action</th></tr>
+    </thead>
+    <tbody id="queue">
+      <tr><td colspan="4" class="text-muted">Loading...</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div id="msg" class="text-center text-danger mt-3" style="min-height: 24px;"></div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const doctorId = "<%= doctorId %>";
+  const tbody = document.getElementById("queue");
+  const statusBadge = document.getElementById("status");
+  const msg = document.getElementById("msg");
+
+  function render(tokens) {
+    if (!tokens.length) {
+      tbody.innerHTML = '<tr><td colspan="4" class="text-muted">Queue empty</td></tr>';
+      return;
+    }
+    tbody.innerHTML = tokens.map(t => `
+      <tr>
+        <td style="font-size: 20px; font-weight: bold;">#${t.number}</td>
+        <td>${t.patient ? t.patient.name : "-"}</td>
+        <td>
+          <span class="badge ${t.status === "claimed" ? "bg-success" : "bg-warning text-dark"}">
+            ${t.status}
+          </span>
+        </td>
+        <td>
+          ${t.status === "waiting"
+            ? `<button class="btn btn-sm btn-primary" onclick="act('${t._id}', 'claim')">Claim</button>`
+            : `<button class="btn btn-sm btn-success" onclick="act('${t._id}', 'treated')">Treated</button>`}
+        </td>
+      </tr>`).join("");
+  }
+
+  async function act(id, action) {
+    msg.textContent = "";
+    const res = await fetch(`/tokens/${id}/${action}`, { method: "PATCH" });
+    if (!res.ok) {
+      const data = await res.json();
+      msg.textContent = data.error || "Something went wrong";
+    }
+    // Success zala tar socket apoaap table update karel
+  }
+
+  fetch("/tokens/queue/" + doctorId).then(r => r.json()).then(render);
+
+  const socket = io();
+  socket.on("connect", () => {
+    socket.emit("joinDoctor", doctorId);
+    statusBadge.textContent = "Live";
+    statusBadge.className = "badge bg-success";
+  });
+  socket.on("disconnect", () => {
+    statusBadge.textContent = "Disconnected";
+    statusBadge.className = "badge bg-danger";
+  });
+  socket.on("queue:update", render);
+</script>
+
+<%- include("partials/footer") %>
+
