@@ -54,7 +54,7 @@
       const data = await res.json();
       msg.textContent = data.error || "Something went wrong";
     }
-    // Success zala tar socket apoaap table update karel
+    // Queue will auto-update via socket, no need to re-render here
   }
 
   fetch("/tokens/queue/" + doctorId).then(r => r.json()).then(render);

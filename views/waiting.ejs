@@ -39,7 +39,7 @@
       </tr>`).join("");
   }
 
-  // Pahilyanda current queue anun dakhav
+  // Initial fetch of queue
   fetch("/tokens/queue/" + doctorId).then(r => r.json()).then(render);
 
   // Live updates

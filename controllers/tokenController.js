@@ -41,7 +41,7 @@ exports.bookToken = async (req, res) => {
     });
 
     await broadcastQueue(req, doctorId);
-        // Mail pathav (await nahi: mail la vel lagla tari response thambat nahi)
+      
     const doctor = await User.findById(doctorId).select("name");
     sendBookingMail({
       to: req.user.email,
@@ -56,7 +56,7 @@ exports.bookToken = async (req, res) => {
   }
 };
      
-// Doctor cha aajcha queue
+// Doctor todays  queue
 exports.getQueue = async (req, res) => {
   try {
     const tokens = await Token.find({
@@ -73,7 +73,7 @@ exports.getQueue = async (req, res) => {
   }
 };
 
-// Doctor: token claim kara (atomic)
+// Doctor: token claim (atomic)
 exports.claimToken = async (req, res) => {
   try {
     const token = await Token.findOneAndUpdate(
@@ -92,7 +92,7 @@ exports.claimToken = async (req, res) => {
   }
 };
 
-// Doctor: treated mark kara (fakt tyani claim kelela token)
+// Doctor: mark treated (only for claimed tokens by the same doctor)
 exports.markTreated = async (req, res) => {
   try {
     const token = await Token.findOneAndUpdate(

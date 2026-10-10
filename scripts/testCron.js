@@ -12,7 +12,7 @@ const today = () =>
 
   const doctor = await User.findOne({ email: "doctor@clinic.com" });
 
-  // Junya tarkhecha test token (number 999: dusrya tokens shi conflict nahi)
+  
   const old = await Token.create({
     number: 999,
     patient: doctor._id,
@@ -22,7 +22,7 @@ const today = () =>
   });
   console.log("Test token created:", old._id.toString(), "| status:", old.status);
 
-  // Same query jo cron madhe aahe
+  // Same query that previously used in the cron job
   const result = await Token.updateMany(
     { queueDate: { $lt: today() }, status: { $in: ["waiting", "claimed"] } },
     { $set: { status: "cancelled" } }

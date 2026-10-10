@@ -8,7 +8,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Mail fail zali tari booking thambat nahi
+
 exports.sendBookingMail = async ({ to, name, number, doctorName }) => {
   if (to.endsWith("@test.com")) return; // test accounts la mail nako
   try {

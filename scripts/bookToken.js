@@ -11,7 +11,7 @@ const getCookie = (res) => res.headers.getSetCookie()[0].split(";")[0];
   const doctor = await User.findOne({ email: "doctor@clinic.com" });
   await mongoose.disconnect();
 
-  // Navin patient banav
+  // new patient register
   const email = `patient${Date.now()}@test.com`;
   const regRes = await fetch(BASE + "/register", {
     method: "POST",
@@ -21,7 +21,7 @@ const getCookie = (res) => res.headers.getSetCookie()[0].split(";")[0];
   });
   const patientCookie = getCookie(regRes);
 
-  // Token book kar
+  // Token book 
   const bookRes = await fetch(BASE + "/tokens", {
     method: "POST",
     headers: { "Content-Type": "application/json", Cookie: patientCookie },

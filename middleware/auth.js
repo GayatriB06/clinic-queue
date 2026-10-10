@@ -28,7 +28,7 @@ exports.authorize = (...roles) => {
     };
 };
 
-// Login aslyas user set karto, nasel tari page block karat nahi
+
 exports.optionalAuth = async (req, res, next) => {
   res.locals.user = null;
   try {

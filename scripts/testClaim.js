@@ -37,7 +37,7 @@ const form = (path, data) =>
   const token = await bookRes.json();
   console.log("1. Token booked: number", token.number, "| status", token.status);
 
-  // 2. 10 claim requests ek-datach
+  // 2. 10 claim requests quickly (only one should succeed, rest should get 409)
   const results = await Promise.all(
     Array.from({ length: 10 }, () =>
       fetch(`${BASE}/tokens/${token._id}/claim`, {

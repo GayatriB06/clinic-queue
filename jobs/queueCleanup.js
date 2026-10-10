@@ -5,7 +5,7 @@ const today = () =>
   new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
 
 const startQueueCleanup = () => {
-  // Test sathi "* * * * *" (roj minute), nantar "0 0 * * *" kar
+  
   cron.schedule(
     "0 0 * * *",
     async () => {
