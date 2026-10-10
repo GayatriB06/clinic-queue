@@ -72,4 +72,4 @@ npm run dev
 
 ## Note
 
-Built as a learning project with AI assistance (Claude) while learning backend development.
+Built as a learning project with AI assistance (Claude) for backend development.
